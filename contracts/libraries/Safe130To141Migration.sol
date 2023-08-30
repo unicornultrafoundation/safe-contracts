@@ -3,9 +3,14 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "../libraries/SafeStorage.sol";
 
+interface ISafe {
+    function setFallbackHandler(address handler) external;
+}
+
 /**
  * @title Migration Contract for Safe Upgrade
  * @notice This contract facilitates the migration of a Safe contract from version 1.3.0 to 1.4.1.
+ *         The older versions should use built-in upgrade methods.
  */
 contract Safe130To141Migration is SafeStorage {
     // Address of this contract
@@ -16,6 +21,9 @@ contract Safe130To141Migration is SafeStorage {
 
     // Address of Safe contract version 1.4.1 Singleton (L2)
     address public constant safe141SingletonL2 = address(0x29fcB43b46531BcA003ddC8FCB67FFE91900C762);
+
+    // Address of Safe contract version 1.4.1 Compatibility Fallback Handler
+    address public constant safe141FallbackHandler = address(0xfd0732Dc9E303f09fCEf3a7388Ad10A83459Ec99);
 
     /**
      * @notice Constructor
@@ -39,6 +47,8 @@ contract Safe130To141Migration is SafeStorage {
         require(address(this) != migrationSingleton, "Migration should only be called via delegatecall");
 
         singleton = safe141Singleton;
+        ISafe(address(this)).setFallbackHandler(safe141FallbackHandler);
+
         emit ChangedMasterCopy(singleton);
     }
 
@@ -50,6 +60,8 @@ contract Safe130To141Migration is SafeStorage {
         require(address(this) != migrationSingleton, "Migration should only be called via delegatecall");
 
         singleton = safe141SingletonL2;
+        ISafe(address(this)).setFallbackHandler(safe141FallbackHandler);
+
         emit ChangedMasterCopy(singleton);
     }
 }
