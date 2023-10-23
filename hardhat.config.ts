@@ -86,6 +86,10 @@ const userConfig: HardhatUserConfig = {
             ...sharedNetworkConfig,
             url: "https://rpc.gnosischain.com",
         },
+        ewc: {
+            ...sharedNetworkConfig,
+            url: `https://rpc.energyweb.org`,
+        },
         goerli: {
             ...sharedNetworkConfig,
             url: `https://goerli.infura.io/v3/${INFURA_KEY}`,
@@ -97,6 +101,10 @@ const userConfig: HardhatUserConfig = {
         polygon: {
             ...sharedNetworkConfig,
             url: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
+        },
+        volta: {
+            ...sharedNetworkConfig,
+            url: `https://volta-rpc.energyweb.org`,
         },
         bsc: {
             ...sharedNetworkConfig,
@@ -114,6 +122,14 @@ const userConfig: HardhatUserConfig = {
             ...sharedNetworkConfig,
             url: `https://api.avax.network/ext/bc/C/rpc`,
         },
+        nebulas: {
+            ...sharedNetworkConfig,
+            url: `https://rpc-nebulas-testnet.uniultra.xyz`,
+        },
+        solaris: {
+            ...sharedNetworkConfig,
+            url: `https://rpc-mainnet.uniultra.xyz`,
+        },
     },
     deterministicDeployment,
     namedAccounts: {
@@ -123,7 +139,28 @@ const userConfig: HardhatUserConfig = {
         timeout: 2000000,
     },
     etherscan: {
-        apiKey: ETHERSCAN_API_KEY,
+        apiKey: {
+            nebulas: "ETHERSCAN_API_KEY",
+            solaris: "ETHERSCAN_API_KEY",
+        },
+        customChains: [
+            {
+              network: "nebulas",
+              chainId: 2484,
+              urls: {
+                apiURL: "https://testnet.u2uscan.xyz/api",
+                browserURL: "https://testnet.u2uscan.xyz/"
+              }
+            },
+            {
+                network: "solaris",
+                chainId: 39,
+                urls: {
+                  apiURL: "https://rpc-mainnet.uniultra.xyz",
+                  browserURL: "https://u2uscan.xyz/"
+                }
+              }
+        ]
     },
 };
 if (NODE_URL) {
